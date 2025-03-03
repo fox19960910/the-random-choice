@@ -1,10 +1,5 @@
 import React, { useRef, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-
-} from "react-native";
+import { View, StyleSheet, Dimensions } from "react-native";
 import "react-native-gesture-handler";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../navigation/AppNavigator";
@@ -23,10 +18,9 @@ const WheelScreen: React.FC<Props> = ({ route }) => {
   const { wheel } = route.params;
   const segments = wheel.choices;
   const onWheelFinished = (winner: string) => {
-    console.log('Kết quả: ', winner);
+    console.log("Kết quả: ", winner);
   };
   return (
-
     <SafeAreaView style={styles.container}>
       <WheelComponent
         segments={segments}
@@ -34,7 +28,7 @@ const WheelScreen: React.FC<Props> = ({ route }) => {
         onFinished={onWheelFinished}
         primaryColor="black"
         contrastColor="white"
-        buttonText="Quay"
+        buttonText="SPIN"
         isOnlyOnce={false}
         size={350}
         upDuration={100}
@@ -78,7 +72,7 @@ const styles = StyleSheet.create({
   winnerText: {
     marginTop: 20,
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 
