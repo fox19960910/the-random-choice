@@ -34,7 +34,7 @@ const WheelScreen: React.FC<Props> = ({ route }) => {
         upDuration={100}
         downDuration={1000}
         fontFamily="Arial"
-        fontSize={16}
+        fontSize={20}
         outlineWidth={5}
       />
     </SafeAreaView>

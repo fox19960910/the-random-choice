@@ -7,11 +7,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Svg, {
-  Defs,
   G,
-  LinearGradient,
   Path,
-  Stop,
   Text as SvgText,
 } from "react-native-svg";
 import Animated, {
@@ -21,7 +18,7 @@ import Animated, {
   Easing,
   runOnJS,
 } from "react-native-reanimated";
-import { getRandomColor, getRandomPastelColor } from "../utils/color";
+import { getContrastYIQ, getRandomPastelColor } from "../utils/color";
 
 interface WheelComponentProps {
   segments: string[];
@@ -61,10 +58,14 @@ const WheelComponent = ({
   const numberOfSegments = segments.length;
   const anglePerSegment = 360 / numberOfSegments;
   const [segColors, setSegColors] = useState<string[]>([]);
+  const [textColors, setTextColors] = useState<string[]>([]);
 
   useEffect(() => {
     const colors = segments.map(() => getRandomPastelColor());
     setSegColors(colors);
+
+    const contrastColors = colors.map((bgColor) => getContrastYIQ(bgColor));
+    setTextColors(contrastColors);
   }, [segments]);
 
   const handleSpinFinish = (winningSegmentName: string) => {
@@ -75,8 +76,6 @@ const WheelComponent = ({
   };
   const spinWheel = () => {
     const spinAngle = Math.floor(Math.random() * 360) + 360 * 5; // Quay ít nhất 5 vòng
-    console.log("spinAngle, ", spinAngle);
-
     angle.value = withTiming(
       angle.value + spinAngle,
       {
@@ -150,18 +149,20 @@ const WheelComponent = ({
                   center +
                   (center - 70) * Math.sin((Math.PI * angleValue) / 180);
                 return (
+                  
                   <SvgText
                     key={`label-${index}`}
                     x={x}
                     y={y}
-                    fill={contrastColor}
+                    fill={textColors[index]}
                     fontSize={fontSize}
                     fontWeight="bold"
                     textAnchor="middle"
                     alignmentBaseline="middle"
                     transform={`rotate(${angleValue}, ${x}, ${y})`}
+
                   >
-                    {segment}
+                    {segment.length > 10 ? `${segment.slice(0, 10)}...` : segment}
                   </SvgText>
                 );
               })}
