@@ -13,19 +13,25 @@ import uuid from "react-native-uuid";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { Wheel } from "../types";
+import { RouteProp } from "@react-navigation/native";
 
-type AddWheelScreenNavigationProp = StackNavigationProp<
+type EditWheelRouteProp = RouteProp<RootStackParamList, "EditWheel">;
+type EditWheelScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
-  "AddWheel"
+  "EditWheel"
 >;
 
 interface Props {
-  navigation: AddWheelScreenNavigationProp;
+  route: EditWheelRouteProp;
+  navigation: EditWheelScreenNavigationProp;
 }
 
-const AddWheelScreen: React.FC<Props> = ({ navigation }) => {
-  const [name, setName] = useState<string>("");
-  const [choices, setChoices] = useState<string[]>(["", ""]);
+const EditWheelScreen: React.FC<Props> = ({ route, navigation }) => {
+  const { wheel } = route.params;
+  const segments = wheel.choices;
+
+  const [name, setName] = useState<string>(wheel.name);
+  const [choices, setChoices] = useState<string[]>(segments);
 
   const addChoiceField = () => {
     setChoices([...choices, ""]);
@@ -37,20 +43,26 @@ const AddWheelScreen: React.FC<Props> = ({ navigation }) => {
     setChoices(newChoices);
   };
 
-  const saveWheel = async () => {
+  const updateWheel = async () => {
     if (!name || choices.some((choice) => !choice)) {
       Alert.alert("Error", "Please fill all fields.");
       return;
     }
 
     const newWheel: Wheel = {
-      id: uuid.v4(),
+      id: wheel.id,
       name,
       choices,
     };
     const storedWheels = await AsyncStorage.getItem("wheels");
     const wheels: Wheel[] = storedWheels ? JSON.parse(storedWheels) : [];
-    await AsyncStorage.setItem("wheels", JSON.stringify([...wheels, newWheel]));
+    const newWheels = wheels.map((w) => {
+      if (w.id === wheel.id) {
+        return newWheel;
+      }
+      return w;
+    });
+    await AsyncStorage.setItem("wheels", JSON.stringify(newWheels));
     navigation.navigate("Wheel", { wheel: newWheel });
   };
 
@@ -74,7 +86,7 @@ const AddWheelScreen: React.FC<Props> = ({ navigation }) => {
       <TouchableOpacity onPress={addChoiceField}>
         <Text style={styles.addChoiceButton}>Add More Choices</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.addButton} onPress={saveWheel}>
+      <TouchableOpacity style={styles.addButton} onPress={updateWheel}>
         <Text style={styles.buttonText}>Add Wheel11</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -111,4 +123,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddWheelScreen;
+export default EditWheelScreen;

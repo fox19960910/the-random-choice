@@ -6,11 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import Svg, {
-  G,
-  Path,
-  Text as SvgText,
-} from "react-native-svg";
+import Svg, { G, Path, Text as SvgText } from "react-native-svg";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -104,7 +100,6 @@ const WheelComponent = ({
 
   const wheelSize = size + 10 + outlineWidth;
   const center = wheelSize / 2;
-  console.log("wheelSize:", wheelSize);
   return (
     <View style={styles.container}>
       <View style={styles.wheelContainer}>
@@ -149,7 +144,6 @@ const WheelComponent = ({
                   center +
                   (center - 70) * Math.sin((Math.PI * angleValue) / 180);
                 return (
-                  
                   <SvgText
                     key={`label-${index}`}
                     x={x}
@@ -160,9 +154,10 @@ const WheelComponent = ({
                     textAnchor="middle"
                     alignmentBaseline="middle"
                     transform={`rotate(${angleValue}, ${x}, ${y})`}
-
                   >
-                    {segment.length > 10 ? `${segment.slice(0, 10)}...` : segment}
+                    {segment.length > 10
+                      ? `${segment.slice(0, 10)}...`
+                      : segment}
                   </SvgText>
                 );
               })}

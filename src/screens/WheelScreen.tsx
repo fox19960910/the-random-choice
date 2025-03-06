@@ -1,42 +1,62 @@
-import React, { useRef, useState } from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
+import React from "react";
+import { View, StyleSheet } from "react-native";
 import "react-native-gesture-handler";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../navigation/AppNavigator";
 
 import { SafeAreaView } from "react-native-safe-area-context";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 import WheelComponent from "../components/WheelComponent";
+import ScreenWrapper from "../components/layouts/ScreenWrap";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 type WheelScreenRouteProp = RouteProp<RootStackParamList, "Wheel">;
+type WheelScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "Wheel"
+>;
 
 interface Props {
   route: WheelScreenRouteProp;
+  navigation: WheelScreenNavigationProp;
 }
 
-const WheelScreen: React.FC<Props> = ({ route }) => {
+const WheelScreen: React.FC<Props> = ({ route, navigation }) => {
   const { wheel } = route.params;
   const segments = wheel.choices;
   const onWheelFinished = (winner: string) => {
     console.log("Kết quả: ", winner);
   };
+  const pressEdit = () => {
+    // console.log("wheel: ", wheel);
+    navigation.navigate("EditWheel", { wheel });
+  };
   return (
     <SafeAreaView style={styles.container}>
-      <WheelComponent
-        segments={segments}
-        winningSegment=""
-        onFinished={onWheelFinished}
-        primaryColor="black"
-        contrastColor="white"
-        buttonText="SPIN"
-        isOnlyOnce={false}
-        size={350}
-        upDuration={100}
-        downDuration={1000}
-        fontFamily="Arial"
-        fontSize={20}
-        outlineWidth={5}
-      />
+      <ScreenWrapper
+        optionButton={<Icon name="edit" size={35} color="#000" />}
+        onOptionPress={pressEdit}
+        backControlPath="WheelList"
+      >
+        <View style={styles.container}>
+          <WheelComponent
+            segments={segments}
+            winningSegment=""
+            onFinished={onWheelFinished}
+            primaryColor="black"
+            contrastColor="white"
+            buttonText="SPIN"
+            isOnlyOnce={false}
+            size={350}
+            upDuration={100}
+            downDuration={1000}
+            fontFamily="Arial"
+            fontSize={20}
+            outlineWidth={5}
+          />
+        </View>
+      </ScreenWrapper>
     </SafeAreaView>
   );
 };
