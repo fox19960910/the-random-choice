@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import "react-native-gesture-handler";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../navigation/AppNavigator";
@@ -10,6 +10,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import WheelComponent from "../components/WheelComponent";
 import ScreenWrapper from "../components/layouts/ScreenWrap";
 import { StackNavigationProp } from "@react-navigation/stack";
+import Title from "../components/Title";
 
 type WheelScreenRouteProp = RouteProp<RootStackParamList, "Wheel">;
 type WheelScreenNavigationProp = StackNavigationProp<
@@ -32,31 +33,37 @@ const WheelScreen: React.FC<Props> = ({ route, navigation }) => {
     // console.log("wheel: ", wheel);
     navigation.navigate("EditWheel", { wheel });
   };
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity style={{ marginRight: 10 }} onPress={pressEdit}>
+          <Icon name="edit" size={30} color="#fff" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, wheel]);
   return (
     <SafeAreaView style={styles.container}>
-      <ScreenWrapper
-        optionButton={<Icon name="edit" size={35} color="#000" />}
-        onOptionPress={pressEdit}
-        backControlPath="WheelList"
-      >
-        <View style={styles.container}>
-          <WheelComponent
-            segments={segments}
-            winningSegment=""
-            onFinished={onWheelFinished}
-            primaryColor="black"
-            contrastColor="white"
-            buttonText="SPIN"
-            isOnlyOnce={false}
-            size={350}
-            upDuration={100}
-            downDuration={1000}
-            fontFamily="Arial"
-            fontSize={20}
-            outlineWidth={5}
-          />
-        </View>
-      </ScreenWrapper>
+      <View style={{ flex: 1, marginTop: 40 }}>
+        <Title text={wheel.name} />
+        <View style={{ height: 40 }} />
+        <WheelComponent
+          segments={segments}
+          winningSegment=""
+          onFinished={onWheelFinished}
+          primaryColor="black"
+          contrastColor="white"
+          buttonText="SPIN"
+          isOnlyOnce={false}
+          size={350}
+          upDuration={100}
+          downDuration={1000}
+          fontFamily="Arial"
+          fontSize={20}
+          outlineWidth={5}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -66,7 +73,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ffefd5",
     justifyContent: "center",
-    alignItems: "center",
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 10,
   },
   spinButton: {
     position: "absolute",

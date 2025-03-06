@@ -9,11 +9,11 @@ import {
   Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import uuid from "react-native-uuid";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { Wheel } from "../types";
 import { RouteProp } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 type EditWheelRouteProp = RouteProp<RootStackParamList, "EditWheel">;
 type EditWheelScreenNavigationProp = StackNavigationProp<
@@ -35,6 +35,11 @@ const EditWheelScreen: React.FC<Props> = ({ route, navigation }) => {
 
   const addChoiceField = () => {
     setChoices([...choices, ""]);
+  };
+  const removeChoiceField = (index: number) => {
+    const newChoices = [...choices];
+    newChoices.splice(index, 1);
+    setChoices(newChoices);
   };
 
   const handleChoiceChange = (text: string, index: number) => {
@@ -74,20 +79,31 @@ const EditWheelScreen: React.FC<Props> = ({ route, navigation }) => {
         value={name}
         onChangeText={setName}
       />
+      <View style={{ height: 20 }} />
       {choices.map((choice, index) => (
-        <TextInput
-          key={index}
-          style={styles.input}
-          placeholder={`Choice ${index + 1}`}
-          value={choice}
-          onChangeText={(text) => handleChoiceChange(text, index)}
-        />
+        <View key={index} style={styles.choice}>
+          <View style={styles.wrapInput}>
+            <TextInput
+              style={styles.input}
+              placeholder={`Choice ${index + 1}`}
+              value={choice}
+              onChangeText={(text) => handleChoiceChange(text, index)}
+            />
+          </View>
+
+          <TouchableOpacity
+            style={styles.wrapIcon}
+            onPress={() => removeChoiceField(index)}
+          >
+            <Icon name="minus-circle" size={35} color="#ffaaa5" />
+          </TouchableOpacity>
+        </View>
       ))}
       <TouchableOpacity onPress={addChoiceField}>
         <Text style={styles.addChoiceButton}>Add More Choices</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.addButton} onPress={updateWheel}>
-        <Text style={styles.buttonText}>Add Wheel11</Text>
+        <Text style={styles.buttonText}>Update Wheel</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -102,8 +118,13 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 10,
-    marginBottom: 15,
+    flex: 1,
     padding: 10,
+  },
+  wrapInput: {
+    flex: 1,
+    marginBottom: 15,
+    marginRight: 15,
   },
   addChoiceButton: {
     color: "#ff8c00",
@@ -120,6 +141,14 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontSize: 18,
+  },
+  choice: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  wrapIcon: {
+    marginBottom: 10,
   },
 });
 

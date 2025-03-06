@@ -65,7 +65,6 @@ const WheelComponent = ({
   }, [segments]);
 
   const handleSpinFinish = (winningSegmentName: string) => {
-    console.log("winningSegmentName:", winningSegmentName);
     setCurrentSegment(winningSegmentName);
     setFinished(true);
     onFinished(winningSegmentName);
