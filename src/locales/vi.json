@@ -5,5 +5,9 @@
     "wheel_fortune": "Vòng quay",
     "setting": "Cài đặt",
     "language": "Ngôn ngữ",
-    "select_language": "Chọn ngôn ngữ"
+    "select_language": "Chọn ngôn ngữ",
+    "add_wheel": "Tạo vòng quay",
+    "add_more_choices": "Thêm lựa chọn",
+    "update": "Cập nhật",
+    "result": "Kết quả"
 }

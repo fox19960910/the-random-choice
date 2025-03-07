@@ -5,5 +5,8 @@
     "wheel_fortune": "Wheel fortune",
     "setting": "Setting",
     "language": "Language",
-    "select_language": "Select language"
+    "select_language": "Select language",
+    "add_more_choices": "Add More Choices",
+    "update": "Update",
+    "result": "Result"
 }

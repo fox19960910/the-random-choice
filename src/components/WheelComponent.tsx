@@ -30,6 +30,7 @@ interface WheelComponentProps {
   fontFamily?: string;
   fontSize?: number;
   outlineWidth?: number;
+  resultText?: string;
 }
 
 const WheelComponent = ({
@@ -46,6 +47,7 @@ const WheelComponent = ({
   fontFamily = "Arial",
   fontSize = 16,
   outlineWidth = 10,
+  resultText = "Result",
 }: WheelComponentProps) => {
   const [isFinished, setFinished] = useState(false);
   const [currentSegment, setCurrentSegment] = useState("");
@@ -175,7 +177,9 @@ const WheelComponent = ({
       </View>
 
       {isFinished && (
-        <Text style={styles.resultText}>Bạn đã trúng: {currentSegment}</Text>
+        <Text style={styles.resultText}>
+          {resultText}: {currentSegment}
+        </Text>
       )}
     </View>
   );

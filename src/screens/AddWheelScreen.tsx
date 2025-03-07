@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   TextInput,
@@ -13,6 +13,7 @@ import uuid from "react-native-uuid";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { Wheel } from "../types";
+import { useTranslation } from "react-i18next";
 
 type AddWheelScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -26,6 +27,26 @@ interface Props {
 const AddWheelScreen: React.FC<Props> = ({ navigation }) => {
   const [name, setName] = useState<string>("");
   const [choices, setChoices] = useState<string[]>(["", ""]);
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
+
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    const validateInputs = () => {
+      if (
+        !name ||
+        name.length > 50 ||
+        choices.some((choice) => !choice || choice.length > 20) ||
+        new Set(choices).size !== choices.length
+      ) {
+        setIsButtonDisabled(true);
+      } else {
+        setIsButtonDisabled(false);
+      }
+    };
+
+    validateInputs();
+  }, [name, choices]);
 
   const addChoiceField = () => {
     setChoices([...choices, ""]);
@@ -61,6 +82,7 @@ const AddWheelScreen: React.FC<Props> = ({ navigation }) => {
         placeholder="Wheel Name"
         value={name}
         onChangeText={setName}
+        maxLength={50}
       />
       {choices.map((choice, index) => (
         <TextInput
@@ -68,14 +90,22 @@ const AddWheelScreen: React.FC<Props> = ({ navigation }) => {
           style={styles.input}
           placeholder={`Choice ${index + 1}`}
           value={choice}
+          maxLength={20}
           onChangeText={(text) => handleChoiceChange(text, index)}
         />
       ))}
       <TouchableOpacity onPress={addChoiceField}>
-        <Text style={styles.addChoiceButton}>Add More Choices</Text>
+        <Text style={styles.addChoiceButton}>{t("add_more_choices")}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.addButton} onPress={saveWheel}>
-        <Text style={styles.buttonText}>Add Wheel11</Text>
+      <TouchableOpacity
+        style={[
+          styles.addButton,
+          isButtonDisabled && { backgroundColor: "#ccc" },
+        ]}
+        onPress={saveWheel}
+        disabled={isButtonDisabled}
+      >
+        <Text style={styles.buttonText}>{t("add_wheel")}</Text>
       </TouchableOpacity>
     </ScrollView>
   );

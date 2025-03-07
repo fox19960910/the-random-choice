@@ -11,6 +11,7 @@ import WheelComponent from "../components/WheelComponent";
 import ScreenWrapper from "../components/layouts/ScreenWrap";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Title from "../components/Title";
+import { useTranslation } from "react-i18next";
 
 type WheelScreenRouteProp = RouteProp<RootStackParamList, "Wheel">;
 type WheelScreenNavigationProp = StackNavigationProp<
@@ -26,6 +27,9 @@ interface Props {
 const WheelScreen: React.FC<Props> = ({ route, navigation }) => {
   const { wheel } = route.params;
   const segments = wheel.choices;
+
+  const { t } = useTranslation();
+
   const onWheelFinished = (winner: string) => {
     console.log("Kết quả: ", winner);
   };
@@ -45,7 +49,7 @@ const WheelScreen: React.FC<Props> = ({ route, navigation }) => {
   }, [navigation, wheel]);
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ flex: 1, marginTop: 40 }}>
+      <View style={{ flex: 1, marginTop: 10 }}>
         <Title text={wheel.name} />
         <View style={{ height: 40 }} />
         <WheelComponent
@@ -62,6 +66,7 @@ const WheelScreen: React.FC<Props> = ({ route, navigation }) => {
           fontFamily="Arial"
           fontSize={20}
           outlineWidth={5}
+          resultText={t("result")}
         />
       </View>
     </SafeAreaView>

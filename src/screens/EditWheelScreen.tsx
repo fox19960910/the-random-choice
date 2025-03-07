@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   TextInput,
@@ -14,6 +14,7 @@ import { RootStackParamList } from "../navigation/AppNavigator";
 import { Wheel } from "../types";
 import { RouteProp } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { useTranslation } from "react-i18next";
 
 type EditWheelRouteProp = RouteProp<RootStackParamList, "EditWheel">;
 type EditWheelScreenNavigationProp = StackNavigationProp<
@@ -32,6 +33,27 @@ const EditWheelScreen: React.FC<Props> = ({ route, navigation }) => {
 
   const [name, setName] = useState<string>(wheel.name);
   const [choices, setChoices] = useState<string[]>(segments);
+
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
+
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    const validateInputs = () => {
+      if (
+        !name ||
+        name.length > 50 ||
+        choices.some((choice) => !choice || choice.length > 20) ||
+        new Set(choices).size !== choices.length
+      ) {
+        setIsButtonDisabled(true);
+      } else {
+        setIsButtonDisabled(false);
+      }
+    };
+
+    validateInputs();
+  }, [name, choices]);
 
   const addChoiceField = () => {
     setChoices([...choices, ""]);
@@ -100,10 +122,17 @@ const EditWheelScreen: React.FC<Props> = ({ route, navigation }) => {
         </View>
       ))}
       <TouchableOpacity onPress={addChoiceField}>
-        <Text style={styles.addChoiceButton}>Add More Choices</Text>
+        <Text style={styles.addChoiceButton}>{t("add_more_choices")}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.addButton} onPress={updateWheel}>
-        <Text style={styles.buttonText}>Update Wheel</Text>
+      <TouchableOpacity
+        style={[
+          styles.addButton,
+          isButtonDisabled && { backgroundColor: "#ccc" },
+        ]}
+        onPress={updateWheel}
+        disabled={isButtonDisabled}
+      >
+        <Text style={styles.buttonText}>{t("update")}</Text>
       </TouchableOpacity>
     </ScrollView>
   );
